@@ -36,7 +36,7 @@ search_command_generator() {
 	local command_string="$1"
 	local engine="$2"
 
-	echo "xargs -I {} tmux run-shell -b 'cd #{pane_current_path}; $command_string $engine\"{}\" > /dev/null'"
+	echo "$command_string \"$engine\$(cat)\" >/dev/null"
 }
 
 generate_open_command() {
