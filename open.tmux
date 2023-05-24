@@ -30,7 +30,7 @@ is_cygwin() {
 
 command_generator() {
 	local command_string="$1"
-	echo "xargs -I {} tmux run-shell -b 'cd #{pane_current_path}; $command_string \"{}\" > /dev/null'"
+	echo "{ cd \"\$(tmux display-message -p '#{pane_current_path}')\" && xargs -I {} $command_string \"{}\" >/dev/null; }"
 }
 
 search_command_generator() {
