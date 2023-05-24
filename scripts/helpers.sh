@@ -43,7 +43,7 @@ stored_engine_vars() {
 
 get_engine() {
 	local engine_var="$1"
-	tmux show-options -g | grep -i "^@open-$engine_var" | cut -d ' ' -f2 | xargs
+	tmux show-options -g | grep "^@open-$engine_var" | cut -d ' ' -f2- | xargs
 }
 
 # The last grep is required to remove non-digits from version such as "3.0a".
