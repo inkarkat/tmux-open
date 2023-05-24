@@ -35,7 +35,7 @@ display_message() {
 stored_engine_vars() {
 	tmux show-options -g |
 		grep -i "^@open-" |
-		grep -Evi "^@open-(editor|opener)" |
+		grep -Evi "^@open-(editor|opener|searcher)" |
 		cut -d '-' -f2 |
 		cut -d ' ' -f1 |
 		xargs

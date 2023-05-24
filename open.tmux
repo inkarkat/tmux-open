@@ -13,6 +13,7 @@ open_editor_option="@open-editor"
 open_editor_override="@open-editor-command"
 
 open_opener_override="@open-opener-command"
+open_searcher_override="@open-searcher-command"
 
 command_exists() {
 	local command="$1"
@@ -58,7 +59,7 @@ generate_open_command() {
 generate_open_search_command() {
 	local engine="$1"
 	local opener
-	if opener="$(get_tmux_option "$open_opener_override" '')" && [ -n "${opener-}" ]; then
+	if opener="$(get_tmux_option "$open_searcher_override" '')" && [ -n "${opener-}" ]; then
 		search_command_generator "$opener" "$engine"
 	elif is_osx; then
 		search_command_generator "open" "$engine"

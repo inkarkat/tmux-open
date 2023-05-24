@@ -74,6 +74,10 @@ Put `set -g @open-editor-command 'my-editor'` in `tmux.conf`.
 
 Put `set -g @open-opener-command 'my-opener'` in `tmux.conf`.
 
+> How can I change the default command for opening the web search?
+
+Put `set -g @open-searcher-command 'my-searcher'` in `tmux.conf`.
+
 > How can I change the default search engine to "duckduckgo" or any other one?
 
 Put `set -g @open-S 'https://www.duckduckgo.com/'` in `tmux.conf`
