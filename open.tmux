@@ -30,7 +30,7 @@ is_cygwin() {
 
 command_generator() {
 	local command_string="$1"
-	echo "{ cd \"\$(tmux display-message -p '#{pane_current_path}')\" && xargs -I {} $command_string \"{}\" >/dev/null; }"
+	echo "{ cd \"\$(tmux display-message -p '#{pane_current_path}')\" && tr '\\n' '\\0' | xargs -0I {} $command_string {} >/dev/null; }"
 }
 
 search_command_generator() {
@@ -81,7 +81,7 @@ generate_editor_command() {
 	editor=$(get_tmux_option "$open_editor_override" "$environment_editor")
 	# vim freezes terminal unless there's the '--' argument. Other editors seem
 	# to be fine with it (textmate [mate], light table [table]).
-	echo "xargs -I {} tmux send-keys '$editor -- \"{}\"'; tmux send-keys 'C-m'"
+	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$editor -- \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
 }
 
 set_copy_mode_open_bindings() {
