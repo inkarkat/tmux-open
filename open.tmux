@@ -64,7 +64,7 @@ generate_open_search_command() {
 	elif is_osx; then
 		search_command_generator "open" "$engine"
 	elif is_cygwin; then
-		command_generator "cygstart"
+		search_command_generator "cygstart" "$engine"
 	elif command_exists "xdg-open"; then
 		search_command_generator "xdg-open" "$engine"
 	else
