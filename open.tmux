@@ -73,15 +73,13 @@ generate_open_search_command() {
 	fi
 }
 
-# 1. write a command to the terminal, example: 'vim -- some_file.txt'
+# 1. write a command to the terminal, example: 'vim some_file.txt'
 # 2. invoke the command by pressing enter/C-m
 generate_editor_command() {
 	local environment_editor="${EDITOR:-vi}"
 	local editor
 	editor=$(get_tmux_option "$open_editor_override" "$environment_editor")
-	# vim freezes terminal unless there's the '--' argument. Other editors seem
-	# to be fine with it (textmate [mate], light table [table]).
-	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$editor -- \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
+	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$editor \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
 }
 
 set_copy_mode_open_bindings() {
