@@ -12,6 +12,10 @@ default_open_editor_key="C-o"
 open_editor_option="@open-editor"
 open_editor_override="@open-editor-command"
 
+default_open_viewer_key="C-l"
+open_viewer_option="@open-viewer"
+open_viewer_override="@open-viewer-command"
+
 open_opener_override="@open-opener-command"
 open_searcher_override="@open-searcher-command"
 
@@ -116,6 +120,23 @@ set_copy_mode_open_editor_bindings() {
 	done
 }
 
+set_copy_mode_open_viewer_bindings() {
+	local viewer_command
+	viewer_command="$(generate_terminal_opener_command "${pager:-less}" "$open_viewer_override")"
+	local key_bindings
+	key_bindings="$(get_tmux_option "$open_viewer_option" "$default_open_viewer_key")"
+	local key
+	for key in $key_bindings; do
+		if tmux-is-at-least 2.4; then
+			tmux bind-key -T copy-mode-vi "$key" send-keys -X copy-pipe-and-cancel "$viewer_command"
+			tmux bind-key -T copy-mode    "$key" send-keys -X copy-pipe-and-cancel "$viewer_command"
+		else
+			tmux bind-key -t vi-copy    "$key" copy-pipe "$viewer_command"
+			tmux bind-key -t emacs-copy "$key" copy-pipe "$viewer_command"
+		fi
+	done
+}
+
 set_copy_mode_open_search_bindings() {
 	local stored_engine_vars
 	stored_engine_vars="$(stored_engine_vars)"
@@ -140,6 +161,7 @@ set_copy_mode_open_search_bindings() {
 main() {
 	set_copy_mode_open_bindings
 	set_copy_mode_open_editor_bindings
+	set_copy_mode_open_viewer_bindings
 	set_copy_mode_open_search_bindings
 }
 
