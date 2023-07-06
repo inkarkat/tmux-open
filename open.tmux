@@ -12,6 +12,10 @@ default_open_editor_key="C-o"
 open_editor_option="@open-editor"
 open_editor_override="@open-editor-command"
 
+default_open_viewer_key="C-l"
+open_viewer_option="@open-viewer"
+open_viewer_override="@open-viewer-command"
+
 open_opener_override="@open-opener-command"
 open_searcher_override="@open-searcher-command"
 
@@ -75,11 +79,11 @@ generate_open_search_command() {
 
 # 1. write a command to the terminal, example: 'vim some_file.txt'
 # 2. invoke the command by pressing enter/C-m
-generate_editor_command() {
-	local environment_editor="${EDITOR:-vi}"
-	local editor
-	editor=$(get_tmux_option "$open_editor_override" "$environment_editor")
-	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$editor \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
+generate_terminal_opener_command() {
+	local default="${1:?}"; shift
+	local override_config="${1:?}"; shift
+	local terminal_command=$(get_tmux_option "$override_config" "$default")
+	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$terminal_command \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
 }
 
 set_copy_mode_open_bindings() {
@@ -101,7 +105,7 @@ set_copy_mode_open_bindings() {
 
 set_copy_mode_open_editor_bindings() {
 	local editor_command
-	editor_command="$(generate_editor_command)"
+	editor_command="$(generate_terminal_opener_command "${EDITOR:-vi}" "$open_editor_override")"
 	local key_bindings
 	key_bindings="$(get_tmux_option "$open_editor_option" "$default_open_editor_key")"
 	local key
@@ -112,6 +116,23 @@ set_copy_mode_open_editor_bindings() {
 		else
 			tmux bind-key -t vi-copy    "$key" copy-pipe "$editor_command"
 			tmux bind-key -t emacs-copy "$key" copy-pipe "$editor_command"
+		fi
+	done
+}
+
+set_copy_mode_open_viewer_bindings() {
+	local viewer_command
+	viewer_command="$(generate_terminal_opener_command "${pager:-less}" "$open_viewer_override")"
+	local key_bindings
+	key_bindings="$(get_tmux_option "$open_viewer_option" "$default_open_viewer_key")"
+	local key
+	for key in $key_bindings; do
+		if tmux-is-at-least 2.4; then
+			tmux bind-key -T copy-mode-vi "$key" send-keys -X copy-pipe-and-cancel "$viewer_command"
+			tmux bind-key -T copy-mode    "$key" send-keys -X copy-pipe-and-cancel "$viewer_command"
+		else
+			tmux bind-key -t vi-copy    "$key" copy-pipe "$viewer_command"
+			tmux bind-key -t emacs-copy "$key" copy-pipe "$viewer_command"
 		fi
 	done
 }
@@ -140,6 +161,7 @@ set_copy_mode_open_search_bindings() {
 main() {
 	set_copy_mode_open_bindings
 	set_copy_mode_open_editor_bindings
+	set_copy_mode_open_viewer_bindings
 	set_copy_mode_open_search_bindings
 }
 
