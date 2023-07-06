@@ -75,11 +75,11 @@ generate_open_search_command() {
 
 # 1. write a command to the terminal, example: 'vim some_file.txt'
 # 2. invoke the command by pressing enter/C-m
-generate_editor_command() {
-	local default_editor="${1:?}"; shift
-	local editor_override_config="${1:?}"; shift
-	local editor=$(get_tmux_option "$editor_override_config" "$default_editor")
-	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$editor \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
+generate_terminal_opener_command() {
+	local default="${1:?}"; shift
+	local override_config="${1:?}"; shift
+	local terminal_command=$(get_tmux_option "$override_config" "$default")
+	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$terminal_command \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
 }
 
 set_copy_mode_open_bindings() {
@@ -101,7 +101,7 @@ set_copy_mode_open_bindings() {
 
 set_copy_mode_open_editor_bindings() {
 	local editor_command
-	editor_command="$(generate_editor_command "${EDITOR:-vi}" "$open_editor_override")"
+	editor_command="$(generate_terminal_opener_command "${EDITOR:-vi}" "$open_editor_override")"
 	local key_bindings
 	key_bindings="$(get_tmux_option "$open_editor_option" "$default_open_editor_key")"
 	local key
