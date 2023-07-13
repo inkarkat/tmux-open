@@ -38,8 +38,8 @@ command_generator() {
 }
 
 search_command_generator() {
-	local command_string="$1"
-	local engine="$2"
+	local command_string="${1:?}"; shift
+	local engine="${1:?}"; shift
 
 	echo "$command_string \"$engine\$(cat)\" >/dev/null"
 }
@@ -61,7 +61,7 @@ generate_open_command() {
 }
 
 generate_open_search_command() {
-	local engine="$1"
+	local engine="${1:?}"; shift
 	local opener
 	if opener="$(get_tmux_option "$open_searcher_override" '')" && [ -n "${opener-}" ]; then
 		search_command_generator "$opener" "$engine"
@@ -87,45 +87,31 @@ generate_terminal_opener_command() {
 }
 
 set_copy_mode_open_bindings() {
-	local open_command
-	open_command="$(generate_open_command)"
-	local key_bindings
-	key_bindings=$(get_tmux_option "$open_option" "$default_open_key")
-	local key
-	for key in $key_bindings; do
+	local open_command="$(generate_open_command)"
+	local key_bindings=$(get_tmux_option "$open_option" "$default_open_key")
+	local key; for key in $key_bindings; do
 		bind_key_copy_mode "$key" copy-pipe-and-cancel "$open_command"
 	done
 }
 
 set_copy_mode_open_editor_bindings() {
-	local editor_command
-	editor_command="$(generate_terminal_opener_command "${EDITOR:-vi}" "$open_editor_override")"
-	local key_bindings
-	key_bindings="$(get_tmux_option "$open_editor_option" "$default_open_editor_key")"
-	local key
-	for key in $key_bindings; do
+	local editor_command="$(generate_terminal_opener_command "${EDITOR:-vi}" "$open_editor_override")"
+	local key_bindings="$(get_tmux_option "$open_editor_option" "$default_open_editor_key")"
+	local key; for key in $key_bindings; do
 		bind_key_copy_mode "$key" copy-pipe-and-cancel "$editor_command"
 	done
 }
 
 set_copy_mode_open_viewer_bindings() {
-	local viewer_command
-	viewer_command="$(generate_terminal_opener_command "${pager:-less}" "$open_viewer_override")"
-	local key_bindings
-	key_bindings="$(get_tmux_option "$open_viewer_option" "$default_open_viewer_key")"
-	local key
-	for key in $key_bindings; do
+	local viewer_command="$(generate_terminal_opener_command "${pager:-less}" "$open_viewer_override")"
+	local key_bindings="$(get_tmux_option "$open_viewer_option" "$default_open_viewer_key")"
+	local key; for key in $key_bindings; do
 		bind_key_copy_mode "$key" copy-pipe-and-cancel "$viewer_command"
 	done
 }
 
 set_copy_mode_open_search_bindings() {
-	local stored_engine_vars
-	stored_engine_vars="$(stored_engine_vars)"
-	local engine_var
-	local engine
-	local key
-
+	local stored_engine_vars="$(stored_engine_vars)" engine_var engine
 	for engine_var in $stored_engine_vars; do
 		engine="$(get_engine "$engine_var")" || continue
 		bind_key_copy_mode "$engine_var" copy-pipe-and-cancel "$(generate_open_search_command "$engine")"
