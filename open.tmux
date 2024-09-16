@@ -83,7 +83,10 @@ generate_terminal_opener_command() {
 	local default="${1:?}"; shift
 	local override_config="${1:?}"; shift
 	local terminal_command=$(get_tmux_option "$override_config" "$default")
-	echo "tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$terminal_command \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
+	local literalHome="$HOME"
+	literalHome="${literalHome//\\/\\\\}"
+	literalHome="${literalHome//&/\\&}"
+	echo "sed -e 's#^~/#${literalHome//#/\\#}/#' | tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$terminal_command \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
 }
 
 set_copy_mode_open_bindings() {
