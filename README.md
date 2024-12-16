@@ -2,7 +2,9 @@
 
 Plugin for opening highlighted selection directly from Tmux copy mode.
 
-Tested and working on Linux, OSX and Cygwin.
+This is a fork of [Bruno Sutic's original tmux-open](https://github.com/tmux-plugins/tmux-open) with fixes and additional features.
+
+Tested and working on Linux.
 
 ### Key bindings
 
@@ -98,7 +100,7 @@ in `tmux.conf`
 
 `tmux-open` works great with:
 
-- [tmux-copycat](https://github.com/tmux-plugins/tmux-copycat) - a plugin for
+- [tmux-copycat](https://github.com/inkarkat/tmux-copycat) - my fork of a plugin for
   regex searches in tmux and fast match selection
 - [tmux-yank](https://github.com/tmux-plugins/tmux-yank) - enables copying
   highlighted text to system clipboard
