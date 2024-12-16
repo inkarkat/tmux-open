@@ -2,7 +2,9 @@
 
 Plugin for opening highlighted selection directly from Tmux copy mode.
 
-Tested and working on Linux, OSX and Cygwin.
+This is a fork of [Bruno Sutic's original tmux-open](https://github.com/tmux-plugins/tmux-open) with fixes and additional features.
+
+Tested and working on Linux.
 
 ### Key bindings
 
@@ -10,6 +12,7 @@ In tmux copy mode:
 
 - `o` - "open" a highlighted selection with the system default program. `open`
     for OS X or `xdg-open` for Linux.
+- `Ctrl-l` - open a highlighted selection with the `$PAGER`
 - `Ctrl-o` - open a highlighted selection with the `$EDITOR`
 - `Shift-s` - search the highlighted selection directly inside a search engine (defaults to google).
 
@@ -66,6 +69,18 @@ Put `set -g @open 'x'` in `tmux.conf`.
 
 Put `set -g @open-editor 'C-x'` in `tmux.conf`.
 
+> How can I change the default editor without setting `$EDITOR`?
+
+Put `set -g @open-editor-command 'my-editor'` in `tmux.conf`.
+
+> How can I change the default command for opening the selection?
+
+Put `set -g @open-opener-command 'my-opener'` in `tmux.conf`.
+
+> How can I change the default command for opening the web search?
+
+Put `set -g @open-searcher-command 'my-searcher'` in `tmux.conf`.
+
 > How can I change the default search engine to "duckduckgo" or any other one?
 
 Put `set -g @open-S 'https://www.duckduckgo.com/'` in `tmux.conf`
@@ -85,7 +100,7 @@ in `tmux.conf`
 
 `tmux-open` works great with:
 
-- [tmux-copycat](https://github.com/tmux-plugins/tmux-copycat) - a plugin for
+- [tmux-copycat](https://github.com/inkarkat/tmux-copycat) - my fork of a plugin for
   regex searches in tmux and fast match selection
 - [tmux-yank](https://github.com/tmux-plugins/tmux-yank) - enables copying
   highlighted text to system clipboard

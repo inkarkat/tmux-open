@@ -1,6 +1,14 @@
 # Changelog
 
-### master
+## v3.1.0 - 16-Dec-2024
+### Added
+- DWIM: Handle filespecs starting with ~/
+- ENH: Add open in pager alternative to open in editor
+### Fixed
+- BUG: Filespecs are not properly quoted
+- FIX: Cygwin search does not use the search engine but simply opens the selected text
+- BUG: engine-var must be matched with case and trailing separator and consider quoting in output
+- FIX: Multi-line search text should be passed as a joined single argument, not one search per line
 
 ### v3.0.0, Nov 01, 2017
 - enable extensibility via search engines (@vasconcelloslf)
