@@ -1,6 +1,6 @@
 # Changelog
 
-## v3.1.0 - RELEASEME
+## v3.1.0 - 16-Dec-2024
 ### Added
 - DWIM: Handle filespecs starting with ~/
 - ENH: Add open in pager alternative to open in editor
