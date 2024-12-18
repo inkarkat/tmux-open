@@ -2,6 +2,7 @@
 
 ## v3.1.1 - RELEASEME
 ### Added
+- Mappings can now use an intermediate (copy mode) table to build multi-key mappings.
 ### Changed
 ### Deprecated
 ### Experimental
