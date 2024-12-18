@@ -2,6 +2,8 @@
 
 ## v3.1.1 - RELEASEME
 ### Added
+- Mappings can now use an intermediate (copy mode) table to build multi-key mappings.
+- Ctrl-v variant of Ctrl-i that uses a graphical `$GUI_EDITOR` instead of `$EDITOR`
 ### Changed
 ### Deprecated
 ### Experimental

@@ -12,8 +12,9 @@ In tmux copy mode:
 
 - `o` - "open" a highlighted selection with the system default program. `open`
     for OS X or `xdg-open` for Linux.
-- `Ctrl-l` - open a highlighted selection with the `$PAGER`
-- `Ctrl-o` - open a highlighted selection with the `$EDITOR`
+- `Ctrl-l` - open a highlighted selection with the `$PAGER` in the terminal
+- `Ctrl-o` - open a highlighted selection with the `$EDITOR` in the terminal
+- `Ctrl-v` - open a highlighted selection with the graphical `$GUI_EDITOR`
 - `Shift-s` - search the highlighted selection directly inside a search engine (defaults to google).
 
 ### Examples

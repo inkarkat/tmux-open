@@ -35,7 +35,7 @@ display_message() {
 stored_engine_vars() {
 	tmux show-options -g |
 		grep -i "^@open-" |
-		grep -Evi "^@open-(editor|opener|searcher)" |
+		grep -Evi "^@open-(editor|viewer|gui-editor|opener|searcher)" |
 		cut -d '-' -f2 |
 		cut -d ' ' -f1 |
 		xargs
@@ -77,17 +77,36 @@ tmux-is-at-least() {
 }
 
 if tmux-is-at-least 2.4; then
+	typeset -a tables=(copy-mode-vi copy-mode)
 	bind_key_copy_mode() {
 		local key="${1:?}"; shift
-		tmux bind-key -T copy-mode-vi "$key" send-keys -X "$@"
-		tmux bind-key -T copy-mode    "$key" send-keys -X "$@"
+		if [[ "$key" =~ ^-T ]]; then
+			tables=("${key#-T}")
+			return
+		fi
+		local table
+		for table in "${tables[@]}"
+		do
+			tmux bind-key -T "$table" "$key" send-keys -X "$@"
+		done
+		tables=(copy-mode-vi copy-mode)
 	}
 else
+	typeset -a tables=(vi-copy emacs-copy)
 	bind_key_copy_mode() {
 		local key="${1:?}"; shift
+		if [[ "$key" =~ ^-T ]]; then
+			tables=("${key#-T}")
+			return
+		fi
+
 		local tmux_command="${1:?}"; shift
 		tmux_command="${tmux_command%-and-cancel}"
-		tmux bind-key -t vi-copy    "$key" "$tmux_command" "$@"
-		tmux bind-key -t emacs-copy "$key" "$tmux_command" "$@"
+		local table
+		for table in "${tables[@]}"
+		do
+			tmux bind-key -t "$table" "$key" "$tmux_command" "$@"
+		done
+		tables=(vi-copy emacs-copy)
 	}
 fi
