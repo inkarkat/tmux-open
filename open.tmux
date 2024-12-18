@@ -16,6 +16,10 @@ default_open_viewer_key="C-l"
 open_viewer_option="@open-viewer"
 open_viewer_override="@open-viewer-command"
 
+default_open_gui_editor_key="C-v"
+open_gui_editor_option="@open-gui-editor"
+open_gui_editor_override="@open-gui-editor-command"
+
 open_opener_override="@open-opener-command"
 open_searcher_override="@open-searcher-command"
 
@@ -58,6 +62,12 @@ generate_open_command() {
 		# error command for Linux machines when 'xdg-open' not installed
 		"$CURRENT_DIR/scripts/tmux_open_error_message.sh" "xdg-open"
 	fi
+}
+
+generate_gui_editor_command() {
+	local gui_editor
+	gui_editor="$(get_tmux_option "$open_gui_editor_override" "${GUI_EDITOR:-gvim}")"
+	command_generator "${gui_editor:?}"
 }
 
 generate_open_search_command() {
@@ -113,6 +123,14 @@ set_copy_mode_open_viewer_bindings() {
 	done
 }
 
+set_copy_mode_open_gui_editor_bindings() {
+	local gui_editor_command="$(generate_gui_editor_command)"
+	local key_bindings=$(get_tmux_option "$open_gui_editor_option" "$default_open_gui_editor_key")
+	local key; for key in $key_bindings; do
+		bind_key_copy_mode "$key" copy-pipe-and-cancel "$gui_editor_command"
+	done
+}
+
 set_copy_mode_open_search_bindings() {
 	local stored_engine_vars="$(stored_engine_vars)" engine_var engine
 	for engine_var in $stored_engine_vars; do
@@ -125,6 +143,7 @@ main() {
 	set_copy_mode_open_bindings
 	set_copy_mode_open_editor_bindings
 	set_copy_mode_open_viewer_bindings
+	set_copy_mode_open_gui_editor_bindings
 	set_copy_mode_open_search_bindings
 }
 
