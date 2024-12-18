@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.1.1 - RELEASEME
+### Added
+### Changed
+### Deprecated
+### Experimental
+### Removed
+### Fixed
+- Ctrl-l now uses $PAGER value instead of (lowercase) $pager
+### Security
+
 ## v3.1.0 - 16-Dec-2024
 ### Added
 - DWIM: Handle filespecs starting with ~/

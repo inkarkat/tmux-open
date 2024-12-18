@@ -106,7 +106,7 @@ set_copy_mode_open_editor_bindings() {
 }
 
 set_copy_mode_open_viewer_bindings() {
-	local viewer_command="$(generate_terminal_opener_command "${pager:-less}" "$open_viewer_override")"
+	local viewer_command="$(generate_terminal_opener_command "${PAGER:-less}" "$open_viewer_override")"
 	local key_bindings="$(get_tmux_option "$open_viewer_option" "$default_open_viewer_key")"
 	local key; for key in $key_bindings; do
 		bind_key_copy_mode "$key" copy-pipe-and-cancel "$viewer_command"
