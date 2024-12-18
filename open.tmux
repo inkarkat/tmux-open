@@ -36,6 +36,14 @@ is_cygwin() {
 	[[ "$(uname)" =~ CYGWIN ]]
 }
 
+translate_tilde_command()
+{
+	local literalHome="$HOME"
+	literalHome="${literalHome//\\/\\\\}"
+	literalHome="${literalHome//&/\\&}"
+	echo "sed -e 's#^~/#${literalHome//#/\\#}/#'"
+}
+
 command_generator() {
 	local command_string="$1"
 	echo "{ cd \"\$(tmux display-message -p '#{pane_current_path}')\" && tr '\\n' '\\0' | xargs -0I {} $command_string {} >/dev/null; }"
@@ -93,10 +101,7 @@ generate_terminal_opener_command() {
 	local default="${1:?}"; shift
 	local override_config="${1:?}"; shift
 	local terminal_command=$(get_tmux_option "$override_config" "$default")
-	local literalHome="$HOME"
-	literalHome="${literalHome//\\/\\\\}"
-	literalHome="${literalHome//&/\\&}"
-	echo "sed -e 's#^~/#${literalHome//#/\\#}/#' | tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$terminal_command \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
+	echo "$(translate_tilde_command) | tr '\\n' '\\0' | xargs -0I {} printf '%q\\n' {} | tmux send-keys -l \"$terminal_command \$(tr '\\n' ' ')\"; tmux send-keys 'C-m'"
 }
 
 set_copy_mode_open_bindings() {
