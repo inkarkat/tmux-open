@@ -20,6 +20,10 @@ default_open_gui_editor_key="C-v"
 open_gui_editor_option="@open-gui-editor"
 open_gui_editor_override="@open-gui-editor-command"
 
+default_open_view_source_key="C-g"
+open_view_source_option="@open-view-source"
+open_view_source_override="@open-view-source-command"
+
 open_opener_override="@open-opener-command"
 open_searcher_override="@open-searcher-command"
 
@@ -76,6 +80,12 @@ generate_gui_editor_command() {
 	local gui_editor
 	gui_editor="$(get_tmux_option "$open_gui_editor_override" "${GUI_EDITOR:-gvim}")"
 	command_generator "${gui_editor:?}"
+}
+
+generate_view_source_command() {
+	local view_source
+	view_source="$(get_tmux_option "$open_view_source_override" "bash -c '\${GUI_EDITOR:-gvim} \$(command -v -- \"\$1\")' --")"
+	command_generator "${view_source:?}"
 }
 
 generate_open_search_command() {
@@ -136,6 +146,14 @@ set_copy_mode_open_gui_editor_bindings() {
 	done
 }
 
+set_copy_mode_open_view_source_bindings() {
+	local view_source_command="$(generate_view_source_command)"
+	local key_bindings=$(get_tmux_option "$open_view_source_option" "$default_open_view_source_key")
+	local key; for key in $key_bindings; do
+		bind_key_copy_mode "$key" copy-pipe-and-cancel "$view_source_command"
+	done
+}
+
 set_copy_mode_open_search_bindings() {
 	local stored_engine_vars="$(stored_engine_vars)" engine_var engine
 	for engine_var in $stored_engine_vars; do
@@ -149,6 +167,7 @@ main() {
 	set_copy_mode_open_editor_bindings
 	set_copy_mode_open_viewer_bindings
 	set_copy_mode_open_gui_editor_bindings
+	set_copy_mode_open_view_source_bindings
 	set_copy_mode_open_search_bindings
 }
 

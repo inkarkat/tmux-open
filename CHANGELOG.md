@@ -4,6 +4,7 @@
 ### Added
 - Mappings can now use an intermediate (copy mode) table to build multi-key mappings.
 - Ctrl-v variant of Ctrl-i that uses a graphical `$GUI_EDITOR` instead of `$EDITOR`
+- Ctrl-g variant of Ctrl-i that shows the source of the file
 ### Changed
 - o(pen) now also handles a literal ~/path/with/tilde
 ### Deprecated

@@ -15,6 +15,7 @@ In tmux copy mode:
 - `Ctrl-l` - open a highlighted selection with the `$PAGER` in the terminal
 - `Ctrl-o` - open a highlighted selection with the `$EDITOR` in the terminal
 - `Ctrl-v` - open a highlighted selection with the graphical `$GUI_EDITOR`
+- `Ctrl-g` - open the source of the highlighted selection
 - `Shift-s` - search the highlighted selection directly inside a search engine (defaults to google).
 
 ### Examples
